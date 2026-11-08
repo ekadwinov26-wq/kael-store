@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kael Store Development - Roblox Maps, Systems & Robux</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Font: Syne & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Syne"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              400: '#a855f7',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              glow: '#06b6d4',
+            },
+            dark: {
+              900: '#07090e',
+              850: '#0c0f17',
+              800: '#111726',
+              700: '#1b2336'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Neon glow effect & custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #07090e; }
+    ::-webkit-scrollbar-thumb { background: #1b2336; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #7c3aed; }
+
+    .cyber-glass {
+      background: rgba(12, 15, 23, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .neon-border:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      box-shadow: 0 0 25px -5px rgba(124, 58, 237, 0.35);
+    }
+    .neon-badge {
+      background: linear-gradient(135deg, rgba(124,58,237,0.2) 0%, rgba(6,182,212,0.15) 100%);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-dark-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+
+  <!-- ==================== HEADER PENGUMUMAN ==================== -->
+  <aside id="bannerText" class="bg-gradient-to-r from-brand-600/30 via-cyan-500/20 to-brand-600/30 border-b border-brand-500/20 text-center py-2 px-4 text-xs font-semibold text-cyan-300 tracking-wide flex items-center justify-center gap-2">
+    <i class="fa-solid fa-bolt text-amber-400"></i>
+    <span>Kael Dev Flash Sale: Instant .rbxm Delivery & Bonus 10% Robux Semua Transaksi!</span>
+  </aside>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 cyber-glass border-b border-white/5 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20 gap-4">
+        
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-3 group">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-600 to-cyan-400 p-[1.5px] shadow-lg shadow-brand-500/20">
+            <div class="w-full h-full bg-dark-900 rounded-[14px] flex items-center justify-center text-white group-hover:scale-95 transition-transform">
+              <i class="fa-solid fa-cube text-xl text-brand-400 group-hover:text-cyan-400 transition-colors"></i>
+            </div>
+          </div>
+          <div>
+            <div class="font-display font-black text-xl tracking-wider text-white">
+              KAEL<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-cyan-400">DEV</span>
+            </div>
+            <div class="text-[10px] font-bold text-slate-400 tracking-widest uppercase -mt-1 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Roblox Assets & Robux
+            </div>
+          </div>
+        </a>
+
+        <!-- Search Bar (Desktop) -->
+        <div class="hidden md:flex flex-1 max-w-md mx-4">
+          <div class="relative w-full">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input 
+              type="text" 
+              id="searchInput" 
+              placeholder="Cari Map (.rbxl), Sistem (.rbxm), Robux..." 
+              class="w-full bg-dark-850 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-500 transition-colors"
+            >
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-3">
+          <!-- Discord Community Link -->
+          <a 
+            id="discordLinkBtn" 
+            href="https://discord.gg" 
+            target="_blank" 
+            class="hidden sm:inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold transition-all"
+          >
+            <i class="fa-brands fa-discord text-base"></i> Discord
+          </a>
+
+          <!-- Cart Button -->
+          <button 
+            id="openCartBtn" 
+            class="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-dark-850 hover:bg-dark-800 border border-white/10 text-slate-200 text-sm font-semibold transition-all"
+          >
+            <i class="fa-solid fa-cart-shopping text-brand-400"></i>
+            <span class="hidden sm:inline">Keranjang</span>
+            <span id="cartCountBadge" class="bg-brand-500 text-white text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-md">0</span>
+          </button>
+
+          <!-- Admin Panel Trigger -->
+          <button 
+            id="openAdminModalBtn" 
+            title="Akses Panel Admin Toko"
+            class="w-10 h-10 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-all"
+          >
+            <i class="fa-solid fa-lock text-sm"></i>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Search -->
+      <div class="pb-3 md:hidden">
+        <div class="relative w-full">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input 
+            type="text" 
+            id="mobileSearchInput" 
+            placeholder="Cari asset, map, script..." 
+            class="w-full bg-dark-850 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-brand-500"
+          >
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== HERO BANNER ==================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+    <div class="relative rounded-3xl cyber-glass border border-white/10 p-6 sm:p-12 overflow-hidden shadow-2xl">
+      <div class="absolute -right-24 -top-24 w-96 h-96 bg-brand-600/20 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute right-1/4 -bottom-24 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 max-w-2xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full neon-badge text-xs font-bold text-cyan-300 mb-5">
+          <i class="fa-solid fa-shield-cat text-brand-400"></i> Official Kael Development Portal
+        </div>
+        <h1 class="font-display text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight mb-4">
+          Upgrade Proyek Roblox Milikmu dengan <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-cyan-400">Asset & Sistem Eksklusif</span>.
+        </h1>
+        <p class="text-slate-400 text-sm sm:text-base leading-relaxed mb-6">
+          Dapatkan file original <b>.rbxl (Map Studio)</b>, <b>.rbxm (Model Script / Music Systems)</b>, serta <b>Top-up Robux Cepat & Aman</b> bergaransi legal 100%.
+        </p>
+
+        <div class="flex flex-wrap gap-4 items-center">
+          <a href="#katalogSection" class="px-6 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-brand-600/30 transition-all flex items-center gap-2">
+            Eksplor Katalog <i class="fa-solid fa-arrow-down"></i>
+          </a>
+          <button onclick="scrollToRobux()" class="px-5 py-3 rounded-xl bg-dark-850 hover:bg-dark-800 border border-cyan-500/30 text-cyan-300 text-sm font-bold flex items-center gap-2 transition-all">
+            <i class="fa-solid fa-coins text-amber-400"></i> Kalkulator Robux
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ROBUX CALCULATOR CARD ==================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4" id="robuxSection">
+    <div class="cyber-glass rounded-2xl p-5 sm:p-6 border border-amber-500/20 bg-gradient-to-r from-amber-500/5 via-dark-850 to-dark-900">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <div class="flex items-center gap-4">
+          <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-2xl">
+            <i class="fa-solid fa-coins"></i>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-amber-400 uppercase tracking-widest">Rate Khusus Kael Store</span>
+            <h3 class="text-lg font-bold text-white">Beli Robux Kilat (Instant Via Gamepass)</h3>
+            <p class="text-xs text-slate-400">Rate Rp 85 / 1 R$ (Sudah Termasuk Cover Pajak Roblox 30%)</p>
+          </div>
+        </div>
+
+        <!-- Interactive Calculator -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div class="flex items-center gap-2 bg-dark-900 border border-white/10 rounded-xl px-3 py-2">
+            <span class="text-xs font-bold text-slate-400">R$</span>
+            <input type="number" id="robuxCalcInput" value="500" min="100" step="100" class="w-24 bg-transparent text-sm font-bold text-white focus:outline-none">
+          </div>
+          <span class="text-slate-400 text-sm">=</span>
+          <div class="bg-dark-900 border border-white/10 rounded-xl px-4 py-2">
+            <span id="robuxCalcPrice" class="text-sm font-extrabold text-emerald-400">Rp 42.500</span>
+          </div>
+          <button id="addRobuxFromCalcBtn" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-dark-900 font-extrabold text-xs transition-transform active:scale-95 flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Masukkan Keranjang
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== KATALOG & FILTER ==================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4" id="katalogSection">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-5">
+      <div>
+        <h2 class="font-display text-2xl font-black text-white flex items-center gap-2.5">
+          <span>Katalog Produk Kael Development</span>
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">Asset original langsung siap import ke Roblox Studio</p>
+      </div>
+
+      <!-- Categories Pills -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0" id="categoryFilterContainer">
+        <button data-cat="all" class="cat-pill active px-4 py-2 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white whitespace-nowrap">Semua</button>
+        <button data-cat="Map Roblox" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-dark-850 text-slate-300 hover:text-white border border-white/5 whitespace-nowrap">Map Roblox (.rbxl)</button>
+        <button data-cat="System & Script" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-dark-850 text-slate-300 hover:text-white border border-white/5 whitespace-nowrap">System & Script (.rbxm)</button>
+        <button data-cat="3D Assets" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-dark-850 text-slate-300 hover:text-white border border-white/5 whitespace-nowrap">3D Assets</button>
+        <button data-cat="Robux Top-up" class="cat-pill px-4 py-2 rounded-xl text-xs font-bold transition-all bg-dark-850 text-slate-300 hover:text-white border border-white/5 whitespace-nowrap">Robux Top-up</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRODUCT GRID ==================== -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1">
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Diisi oleh Javascript -->
+    </div>
+
+    <div id="noProductsFound" class="hidden text-center py-20">
+      <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-slate-400 text-2xl mb-3">
+        <i class="fa-solid fa-ghost"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-300">Produk Tidak Ditemukan</h3>
+      <p class="text-xs text-slate-500 mt-1">Coba kata kunci lain atau bersihkan filter pencarian.</p>
+    </div>
+  </main>
+
+  <!-- ==================== CART DRAWER ==================== -->
+  <div id="cartModal" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <div id="cartBackdrop" class="fixed inset-0 bg-dark-900/80 backdrop-blur-md transition-opacity opacity-0 duration-300"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-8">
+      <div id="cartPanel" class="w-screen max-w-md bg-dark-850 border-l border-white/10 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300">
+        
+        <!-- Header Cart -->
+        <div class="p-5 border-b border-white/5 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-cart-shopping text-brand-400 text-lg"></i>
+            <h2 class="text-base font-bold text-white">Keranjang Order Kael Dev</h2>
+          </div>
+          <button id="closeCartBtn" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 flex items-center justify-center transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- List Items -->
+        <div class="flex-1 overflow-y-auto p-5 divide-y divide-white/5 space-y-3" id="cartItemList">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- Checkout Form & Data Buyer -->
+        <div class="p-5 border-t border-white/5 bg-dark-900 space-y-3.5">
+          <div class="space-y-2">
+            <label class="text-[11px] font-bold text-slate-300 uppercase tracking-wider block">Data Roblox Pembeli:</label>
+            <input 
+              type="text" 
+              id="buyerRobloxUser" 
+              placeholder="Username Roblox Anda (cth: Kael_Dev99)" 
+              class="w-full bg-dark-850 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+            >
+            <input 
+              type="text" 
+              id="buyerWhatsapp" 
+              placeholder="Nomor WhatsApp Anda (cth: 08123456789)" 
+              class="w-full bg-dark-850 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+            >
+            <input 
+              type="text" 
+              id="buyerNotes" 
+              placeholder="Catatan / Discord Tag (Opsional)" 
+              class="w-full bg-dark-850 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500"
+            >
+          </div>
+
+          <!-- Total Calculation -->
+          <div class="pt-2 border-t border-white/5 flex items-center justify-between">
+            <span class="text-xs text-slate-400">Total Tagihan:</span>
+            <span id="cartTotalPrice" class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-cyan-400">Rp 0</span>
+          </div>
+
+          <!-- Payment Options -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button 
+              id="checkoutWhatsappBtn" 
+              class="py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-emerald-600/20"
+            >
+              <i class="fa-brands fa-whatsapp text-base"></i> Beli via WA
+            </button>
+            <button 
+              id="openQrisModalBtn" 
+              class="py-3 px-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md shadow-cyan-600/20"
+            >
+              <i class="fa-solid fa-qrcode text-base"></i> Bayar QRIS
+            </button>
+          </div>
+          <p class="text-[10px] text-center text-slate-500">File asset dikirim via Discord / Google Drive setelah konfirmasi pembayaran.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DETAIL PRODUK ==================== -->
+  <div id="productDetailModal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 p-4 text-center">
+      <div id="detailBackdrop" class="fixed inset-0 bg-dark-900/80 backdrop-blur-md transition-opacity opacity-0 duration-300"></div>
+
+      <div id="detailBox" class="inline-block bg-dark-850 border border-white/10 rounded-3xl text-left overflow-hidden shadow-2xl transform opacity-0 scale-95 transition-all duration-300 max-w-xl w-full relative z-10">
+        <button id="closeDetailBtn" class="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-dark-900/80 hover:bg-dark-900 text-slate-400 flex items-center justify-center border border-white/10 transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="aspect-video w-full bg-dark-900 relative">
+          <img id="modalDetailImage" src="" alt="Thumbnail" class="w-full h-full object-cover">
+          <span id="modalDetailFormatBadge" class="absolute bottom-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-black uppercase bg-black/80 text-cyan-300 border border-cyan-400/30">
+            .RBXL
+          </span>
+        </div>
+
+        <div class="p-6">
+          <span id="modalDetailCategory" class="text-[11px] font-bold text-brand-400 tracking-wider uppercase">Map Roblox</span>
+          <h3 id="modalDetailTitle" class="text-xl font-bold text-white mt-1">Nama Produk</h3>
+          <div class="text-xl font-black text-emerald-400 mt-2" id="modalDetailPrice">Rp 0</div>
+          
+          <div class="mt-4 p-3 rounded-xl bg-dark-900 border border-white/5">
+            <h4 class="text-xs font-bold text-slate-300 mb-1">Deskripsi & Fitur Script:</h4>
+            <p id="modalDetailDesc" class="text-xs text-slate-400 leading-relaxed"></p>
+          </div>
+
+          <div class="mt-6 flex gap-3">
+            <button id="modalDetailAddToCart" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-lg">
+              <i class="fa-solid fa-cart-plus"></i> Tambah ke Keranjang
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== QRIS PAYMENT MODAL ==================== -->
+  <div id="qrisModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen px-4 p-4 text-center">
+      <div id="qrisBackdrop" class="fixed inset-0 bg-dark-900/85 backdrop-blur-md"></div>
+      <div class="inline-block bg-dark-850 border border-white/10 rounded-3xl p-6 text-center max-w-sm w-full relative z-10 shadow-2xl">
+        <button onclick="closeQrisModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 text-slate-400 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto mb-3 text-xl">
+          <i class="fa-solid fa-qrcode"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white">QRIS All Payment</h3>
+        <p class="text-xs text-slate-400 mt-1">Scan melalui BCA, GoPay, Dana, OVO, atau ShopeePay</p>
+
+        <div class="bg-white p-3 rounded-2xl my-4 inline-block shadow-inner">
+          <img id="qrisDisplayImg" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=KAEL-STORE-DEVELOPMENT-PAYMENT" alt="QRIS Code" class="w-48 h-48 mx-auto object-contain">
+        </div>
+
+        <div class="bg-dark-900 rounded-xl p-3 border border-white/5 mb-4 text-left">
+          <div class="text-[10px] text-slate-400 uppercase">Jumlah yang harus dibayar:</div>
+          <div class="flex items-center justify-between mt-0.5">
+            <span id="qrisAmountText" class="text-lg font-black text-emerald-400">Rp 0</span>
+            <button onclick="copyQrisAmount()" class="text-xs text-brand-400 hover:underline flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i> Salin
+            </button>
+          </div>
+        </div>
+
+        <button onclick="confirmQrisPayment()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2">
+          <i class="fa-brands fa-whatsapp"></i> Konfirmasi Bukti Transfer ke WA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN PANEL MODAL (PROTECTED) ==================== -->
+  <div id="adminModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen px-4 p-4 text-center">
+      <div id="adminBackdrop" class="fixed inset-0 bg-dark-900/90 backdrop-blur-md"></div>
+
+      <!-- VIEW 1: GATE LOGIN ADMIN KEY / PIN -->
+      <div id="adminLoginGate" class="inline-block bg-dark-850 border border-brand-500/30 rounded-3xl p-6 sm:p-8 text-center max-w-md w-full relative z-10 shadow-2xl">
+        <button onclick="closeAdminModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/5 text-slate-400 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/30 text-brand-400 flex items-center justify-center mx-auto mb-3 text-2xl">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h3 class="text-xl font-extrabold text-white">Whitelist Admin Verification</h3>
+        <p class="text-xs text-slate-400 mt-1">Masukkan Admin Passkey / PIN Whitelist untuk mengelola katalog, store & whitelist anggota.</p>
+        
+        <div class="mt-6 space-y-3">
+          <input 
+            type="password" 
+            id="adminKeyInput" 
+            placeholder="Masukkan Passkey Admin..." 
+            class="w-full bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-center text-sm font-mono tracking-widest text-cyan-300 focus:outline-none focus:border-brand-500"
+          >
+          <button 
+            onclick="verifyAdminAccess()" 
+            class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 text-white font-bold text-xs uppercase tracking-wider transition-all"
+          >
+            Buka Panel Admin <i class="fa-solid fa-arrow-right ml-1"></i>
+          </button>
+          <div class="text-[11px] text-slate-500">
+            Default Key awal: <span class="text-brand-400 font-mono">kael2026</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: FULL ADMIN DASHBOARD -->
+      <div id="adminDashboardView" class="hidden inline-block bg-dark-850 border border-white/10 rounded-3xl text-left overflow-hidden max-w-4xl w-full relative z-10 shadow-2xl">
+        <!-- Header Dashboard -->
+        <div class="p-6 border-b border-white/5 flex flex-wrap items-center justify-between gap-4 bg-dark-900">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-gears"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-white">Kael Dev Management Console</h3>
+              <p class="text-xs text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> Whitelist Authenticated</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 text-xs font-bold">
+              <i class="fa-solid fa-right-from-bracket"></i> Keluar
+            </button>
+            <button onclick="closeAdminModal()" class="w-8 h-8 rounded-lg bg-white/5 text-slate-400 flex items-center justify-center">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dashboard Navigation Tabs -->
+        <div class="flex border-b border-white/5 bg-dark-850 px-6 overflow-x-auto">
+          <button onclick="switchAdminTab('products')" id="tabBtnProducts" class="admin-tab active py-3.5 px-4 text-xs font-bold text-brand-400 border-b-2 border-brand-500 flex items-center gap-2">
+            <i class="fa-solid fa-box-open"></i> Katalog Produk
+          </button>
+          <button onclick="switchAdminTab('whitelist')" id="tabBtnWhitelist" class="admin-tab py-3.5 px-4 text-xs font-bold text-slate-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-user-lock"></i> Kelola Whitelist Admin
+          </button>
+          <button onclick="switchAdminTab('settings')" id="tabBtnSettings" class="admin-tab py-3.5 px-4 text-xs font-bold text-slate-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i> Pengaturan Toko
+          </button>
+          <button onclick="switchAdminTab('orders')" id="tabBtnOrders" class="admin-tab py-3.5 px-4 text-xs font-bold text-slate-400 hover:text-white flex items-center gap-2">
+            <i class="fa-solid fa-receipt"></i> Log Pesanan
+          </button>
+        </div>
+
+        <!-- Tab Content Area -->
+        <div class="p-6 max-h-[70vh] overflow-y-auto">
+          
+          <!-- TAB 1: KATALOG PRODUK -->
+          <div id="adminTabProducts" class="space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <h4 class="text-sm font-bold text-white">Daftar Asset & Produk Aktif</h4>
+              <button onclick="openProductFormModal()" class="px-3.5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-plus"></i> Tambah Produk Baru
+              </button>
+            </div>
+
+            <div class="border border-white/10 rounded-2xl overflow-hidden">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-dark-900 text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/5">
+                  <tr>
+                    <th class="p-3">Produk</th>
+                    <th class="p-3">Kategori</th>
+                    <th class="p-3">Format</th>
+                    <th class="p-3">Harga</th>
+                    <th class="p-3 text-right">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="adminProductTableBody" class="divide-y divide-white/5">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 2: MANAJEMEN WHITELIST ADMIN -->
+          <div id="adminTabWhitelist" class="hidden space-y-6">
+            <div class="bg-brand-950/40 border border-brand-500/20 p-4 rounded-2xl">
+              <h4 class="text-xs font-bold text-brand-300 flex items-center gap-2">
+                <i class="fa-solid fa-circle-info"></i> Sistem Whitelist Admin
+              </h4>
+              <p class="text-[11px] text-slate-400 mt-1">
+                Semua admin yang terdaftar di daftar whitelist dapat login ke dashboard ini untuk mengubah harga, menambahkan map Roblox, dan mengedit stok. Master Key tidak dapat dihapus.
+              </p>
+            </div>
+
+            <!-- Form Tambah Whitelist -->
+            <div class="p-4 rounded-2xl bg-dark-900 border border-white/5">
+              <h5 class="text-xs font-bold text-white mb-3">Tambah Admin Baru ke Whitelist:</h5>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <input type="text" id="newAdminName" placeholder="Nama / Discord Tag Admin" class="bg-dark-850 border border-white/10 rounded-xl px-3 py-2 text-xs text-white">
+                <input type="text" id="newAdminKey" placeholder="Passkey / PIN Baru (min 4 digit)" class="bg-dark-850 border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-mono">
+                <button onclick="addAdminToWhitelist()" class="py-2 px-4 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs">
+                  <i class="fa-solid fa-user-plus mr-1"></i> Tambah Whitelist
+                </button>
+              </div>
+            </div>
+
+            <!-- List Whitelisted Admins -->
+            <div class="border border-white/10 rounded-2xl overflow-hidden">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-dark-900 text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/5">
+                  <tr>
+                    <th class="p-3">Nama / Tag</th>
+                    <th class="p-3">Passkey</th>
+                    <th class="p-3">Role</th>
+                    <th class="p-3 text-right">Opsi</th>
+                  </tr>
+                </thead>
+                <tbody id="adminWhitelistTableBody" class="divide-y divide-white/5">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- TAB 3: PENGATURAN TOKO -->
+          <div id="adminTabSettings" class="hidden space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">Nomor WhatsApp Admin (Checkout):</label>
+                <input type="text" id="settingWhatsapp" class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white">
+                <span class="text-[10px] text-slate-500">Format: 6281234567890 (Gunakan kode negara 62)</span>
+              </div>
+              <div>
+                <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">Link Discord Community:</label>
+                <input type="text" id="settingDiscord" class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white">
+              </div>
+            </div>
+
+            <div>
+              <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">Banner Teks Pengumuman Promo:</label>
+              <input type="text" id="settingBanner" class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white">
+            </div>
+
+            <div>
+              <label class="text-[11px] font-bold text-slate-400 uppercase block mb-1">URL Gambar QRIS:</label>
+              <input type="text" id="settingQrisUrl" class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white">
+              <span class="text-[10px] text-slate-500">Bisa gunakan link gambar barcode QRIS Anda atau generator QR</span>
+            </div>
+
+            <div class="pt-2">
+              <button onclick="saveStoreSettings()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-floppy-disk"></i> Simpan Pengaturan Toko
+              </button>
+            </div>
+          </div>
+
+          <!-- TAB 4: RIWAYAT PESANAN -->
+          <div id="adminTabOrders" class="hidden space-y-4">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-white">Log Pesanan Lokal Terbaru:</h4>
+              <button onclick="clearOrderHistory()" class="text-xs text-red-400 hover:underline">Hapus Semua Log</button>
+            </div>
+            <div class="border border-white/10 rounded-2xl overflow-hidden">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-dark-900 text-slate-400 uppercase text-[10px] tracking-wider border-b border-white/5">
+                  <tr>
+                    <th class="p-3">ID / Waktu</th>
+                    <th class="p-3">User Roblox</th>
+                    <th class="p-3">WA</th>
+                    <th class="p-3">Item Pesanan</th>
+                    <th class="p-3">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="adminOrderTableBody" class="divide-y divide-white/5">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== MODAL FORM ADD / EDIT PRODUK ==================== -->
+  <div id="productFormModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+    <div class="flex items-center justify-center min-h-screen px-4 p-4 text-center">
+      <div class="fixed inset-0 bg-dark-900/80 backdrop-blur-md"></div>
+      <div class="inline-block bg-dark-850 border border-white/10 rounded-3xl p-6 text-left max-w-lg w-full relative z-10 shadow-2xl">
+        <div class="flex items-center justify-between pb-3 border-b border-white/5">
+          <h3 id="productFormTitle" class="text-sm font-bold text-white">Tambah Asset Baru</h3>
+          <button onclick="closeProductFormModal()" class="w-7 h-7 rounded-lg bg-white/5 text-slate-400 flex items-center justify-center">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form id="productCrudForm" class="mt-4 space-y-3" onsubmit="handleProductSubmit(event)">
+          <input type="hidden" id="crudProductId">
+          
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Nama Produk / Asset:</label>
+            <input type="text" id="crudTitle" required class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white" placeholder="Cth: Nexora Club Map Studio">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Kategori:</label>
+              <select id="crudCategory" class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white">
+                <option value="Map Roblox">Map Roblox (.rbxl)</option>
+                <option value="System & Script">System & Script (.rbxm)</option>
+                <option value="3D Assets">3D Assets</option>
+                <option value="Robux Top-up">Robux Top-up</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Format File / Tipe:</label>
+              <input type="text" id="crudFormat" required class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white" placeholder="Cth: .rbxl / .rbxm / Instant Transfer">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Harga (Rupiah):</label>
+              <input type="number" id="crudPrice" required class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white" placeholder="50000">
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">URL Gambar Thumbnail:</label>
+              <input type="url" id="crudImage" required class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white" placeholder="https://...">
+            </div>
+          </div>
+
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase block mb-1">Deskripsi & Fitur:</label>
+            <textarea id="crudDesc" rows="3" required class="w-full bg-dark-900 border border-white/10 rounded-xl p-2.5 text-xs text-white" placeholder="Jelaskan fitur-fitur map/script..."></textarea>
+          </div>
+
+          <div class="pt-2 flex justify-end gap-2">
+            <button type="button" onclick="closeProductFormModal()" class="px-4 py-2 rounded-xl bg-white/5 text-slate-300 text-xs font-bold">Batal</button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold">Simpan Produk</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FLOATING TOAST ==================== -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 cyber-glass px-4 py-3 rounded-2xl border border-white/10 shadow-2xl">
+    <div id="toastIcon" class="w-7 h-7 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">
+      <i class="fa-solid fa-check"></i>
+    </div>
+    <span id="toastMsg" class="text-xs font-semibold text-slate-200">Notifikasi</span>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-dark-950 border-t border-white/5 text-slate-500 text-xs mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-brand-600/30 text-brand-400 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-cube"></i>
+          </div>
+          <div>
+            <span class="font-display font-extrabold text-white text-sm">Kael Store Development</span>
+            <p class="text-[11px] text-slate-500">High Quality Roblox Developer Assets & Instant Robux.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs">
+          <span>&copy; 2026 Kael Development</span>
+          <span class="text-slate-700">|</span>
+          <button onclick="document.getElementById('openAdminModalBtn').click()" class="text-slate-400 hover:text-cyan-400">
+            <i class="fa-solid fa-lock mr-1"></i> Admin Whitelist
+          </button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT SYSTEM ==================== -->
+  <script>
+    /* ========================================================
+       DATA DEFAULT AWAL (Disimpan ke LocalStorage otomatis)
+    ======================================================== */
+    const DEFAULT_PRODUCTS = [
+      {
+        id: 1,
+        title: "Nexora Cyber Nightclub Map",
+        category: "Map Roblox",
+        format: ".RBXL",
+        price: 135000,
+        image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=700&auto=format&fit=crop&q=80",
+        description: "Map nightclub futuristik lengkap dengan pencahayaan neon volumetrik, panggung DJ, bar area, VIP lounge, dan sistem pintu otomatis."
+      },
+      {
+        id: 2,
+        title: "Kael Ultra Music System & DJ Suite",
+        category: "System & Script",
+        format: ".RBXM",
+        price: 85000,
+        image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=700&auto=format&fit=crop&q=80",
+        description: "Sistem audio player synced server-side, UI DJ mixer interaktif, playlist queue, pitch/volume controller, dan efek visual audio spectrum."
+      },
+      {
+        id: 3,
+        title: "Cyberpunk Tokyo Shibuya City Map",
+        category: "Map Roblox",
+        format: ".RBXL",
+        price: 199000,
+        image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?w=700&auto=format&fit=crop&q=80",
+        description: "Map jalanan Tokyo cyber dengan gedung bertingkat, billboard animasi, jalanan aspal basah reflektif, dan interior toko yang bisa dimasuki."
+      },
+      {
+        id: 4,
+        title: "AFK Dance & Synchronized Emote System",
+        category: "System & Script",
+        format: ".RBXM",
+        price: 65000,
+        image: "https://images.unsplash.com/photo-1547153760-18fc86324498?w=700&auto=format&fit=crop&q=80",
+        description: "Script sinkronisasi tarian antar player dengan UI modern, leaderboard waktu dance, efek partikel khusus, dan sistem save data otomatis."
+      },
+      {
+        id: 5,
+        title: "Streetwear Cyber Bomber & Mask 3D Pack",
+        category: "3D Assets",
+        format: "FBX / .RBXM",
+        price: 49000,
+        image: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=700&auto=format&fit=crop&q=80",
+        description: "Bundel asset 3D aksesoris Roblox R15/R6 berlapis tekstur PBR: Jaket Bomber Hologram, Topeng Cyber Ninja, dan Sepatu High-top."
+      },
+      {
+        id: 6,
+        title: "Paket Top-up 500 Robux (Fast Delivery)",
+        category: "Robux Top-up",
+        format: "Instant Transfer",
+        price: 42500,
+        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=700&auto=format&fit=crop&q=80",
+        description: "Top-up 500 R$ via metode Gamepass resmi Roblox. Pajak 30% ditanggung Kael Store (pembeli menerima bersih 500 Robux)."
+      },
+      {
+        id: 7,
+        title: "Paket Top-up 1.000 Robux (Fast Delivery)",
+        category: "Robux Top-up",
+        format: "Instant Transfer",
+        price: 85000,
+        image: "https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?w=700&auto=format&fit=crop&q=80",
+        description: "Top-up 1.000 R$ bersih masuk ke akun Roblox Anda. Garansi legalitas Robux 100% dari revenue resmi."
+      }
+    ];
+
+    const DEFAULT_SETTINGS = {
+      whatsappNumber: "6281234567890",
+      discordUrl: "https://discord.gg/kaeldev",
+      bannerText: "Kael Dev Flash Sale: Instant .rbxm Delivery & Bonus 10% Robux Semua Transaksi!",
+      qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=KAEL-STORE-DEVELOPMENT-QRIS-OFFICIAL"
+    };
+
+    const DEFAULT_WHITELIST = [
+      { key: "kael2026", name: "Kael (Owner)", role: "Master Admin" },
+      { key: "admin123", name: "Co-Dev Store", role: "Manager" }
+    ];
+
+    /* ========================================================
+       INISIALISASI STORAGE
+    ======================================================== */
+    let products = JSON.parse(localStorage.getItem('kael_products')) || DEFAULT_PRODUCTS;
+    let storeSettings = JSON.parse(localStorage.getItem('kael_settings')) || DEFAULT_SETTINGS;
+    let adminWhitelist = JSON.parse(localStorage.getItem('kael_whitelist')) || DEFAULT_WHITELIST;
+    let orderLogs = JSON.parse(localStorage.getItem('kael_orders')) || [];
+    let cart = [];
+    let selectedCategory = "all";
+    let searchQuery = "";
+    let activeDetailProduct = null;
+    let isAdminLoggedIn = false;
+
+    function saveProducts() { localStorage.setItem('kael_products', JSON.stringify(products)); }
+    function saveSettings() { localStorage.setItem('kael_settings', JSON.stringify(storeSettings)); }
+    function saveWhitelist() { localStorage.setItem('kael_whitelist', JSON.stringify(adminWhitelist)); }
+    function saveOrderLogs() { localStorage.setItem('kael_orders', JSON.stringify(orderLogs)); }
+
+    const formatRupiah = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
+
+    /* ========================================================
+       RENDER STOREFRONT
+    ======================================================== */
+    function renderStorefront() {
+      // Perbarui Pengaturan Statis
+      document.getElementById('bannerText').querySelector('span').textContent = storeSettings.bannerText;
+      document.getElementById('discordLinkBtn').href = storeSettings.discordUrl;
+
+      // Filter Produk
+      const filtered = products.filter(item => {
+        const matchCat = selectedCategory === "all" || item.category === selectedCategory;
+        const matchSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            item.description.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchCat && matchSearch;
+      });
+
+      const grid = document.getElementById('productGrid');
+      const emptyBox = document.getElementById('noProductsFound');
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyBox.classList.remove('hidden');
+        return;
+      }
+
+      emptyBox.classList.add('hidden');
+      grid.innerHTML = filtered.map(item => `
+        <div class="cyber-glass rounded-2xl border border-white/5 overflow-hidden flex flex-col group neon-border transition-all duration-300">
+          <div class="relative aspect-video overflow-hidden bg-dark-900 cursor-pointer" onclick="openProductDetail(${item.id})">
+            <img 
+              src="${item.image}" 
+              alt="${item.title}" 
+              loading="lazy" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              onerror="this.src='https://placehold.co/600x400/111726/a855f7?text=Kael+Dev'"
+            >
+            <div class="absolute top-3 left-3 flex gap-2">
+              <span class="px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-black/75 backdrop-blur-md text-cyan-300 border border-cyan-400/30">
+                ${item.format}
+              </span>
+            </div>
+            <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold bg-dark-900/80 text-brand-400 border border-brand-500/30">
+              ${item.category}
+            </span>
+          </div>
+
+          <div class="p-4 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 onclick="openProductDetail(${item.id})" class="text-sm font-bold text-white hover:text-brand-400 cursor-pointer line-clamp-1 transition-colors">
+                ${item.title}
+              </h3>
+              <p class="text-[11px] text-slate-400 line-clamp-2 mt-1 leading-relaxed">
+                ${item.description}
+              </p>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+              <div>
+                <span class="text-[9px] uppercase tracking-wider text-slate-500 block">Harga</span>
+                <span class="text-base font-extrabold text-emerald-400">${formatRupiah(item.price)}</span>
+              </div>
+              <div class="flex gap-1.5">
+                <button onclick="openProductDetail(${item.id})" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 flex items-center justify-center text-xs" title="Detail">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+                <button onclick="addToCart(${item.id})" class="h-8 px-3 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs flex items-center gap-1.5 transition-transform active:scale-90">
+                  <i class="fa-solid fa-cart-plus"></i> Beli
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    /* ========================================================
+       SEARCH & CATEGORY FILTER LISTENERS
+    ======================================================== */
+    const categoryButtons = document.querySelectorAll('.cat-pill');
+    categoryButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        categoryButtons.forEach(b => {
+          b.classList.remove('bg-brand-600', 'text-white');
+          b.classList.add('bg-dark-850', 'text-slate-300');
+        });
+        btn.classList.add('bg-brand-600', 'text-white');
+        btn.classList.remove('bg-dark-850', 'text-slate-300');
+        selectedCategory = btn.getAttribute('data-cat');
+        renderStorefront();
+      });
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    const mobileSearchInput = document.getElementById('mobileSearchInput');
+    function onSearch(e) {
+      searchQuery = e.target.value;
+      if (e.target === searchInput) mobileSearchInput.value = searchQuery;
+      if (e.target === mobileSearchInput) searchInput.value = searchQuery;
+      renderStorefront();
+    }
+    searchInput.addEventListener('input', onSearch);
+    mobileSearchInput.addEventListener('input', onSearch);
+
+    /* ========================================================
+       ROBUX CALCULATOR LOGIC
+    ======================================================== */
+    const robuxCalcInput = document.getElementById('robuxCalcInput');
+    const robuxCalcPrice = document.getElementById('robuxCalcPrice');
+    const addRobuxFromCalcBtn = document.getElementById('addRobuxFromCalcBtn');
+    const RATE_PER_ROBUX = 85; // 85 IDR per 1 Robux
+
+    function updateRobuxCalculation() {
+      const amount = Math.max(100, parseInt(robuxCalcInput.value) || 0);
+      const totalPrice = amount * RATE_PER_ROBUX;
+      robuxCalcPrice.textContent = formatRupiah(totalPrice);
+      return { amount, totalPrice };
+    }
+
+    robuxCalcInput.addEventListener('input', updateRobuxCalculation);
+
+    addRobuxFromCalcBtn.addEventListener('click', () => {
+      const { amount, totalPrice } = updateRobuxCalculation();
+      const customRobuxItem = {
+        id: 'robux_' + Date.now(),
+        title: `Custom Top-up ${amount.toLocaleString('id-ID')} Robux`,
+        category: "Robux Top-up",
+        format: "Instant Transfer",
+        price: totalPrice,
+        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=700&auto=format&fit=crop&q=80",
+        description: `Top-up kustom ${amount} R$ via gamepass (pajak 30% ditanggung toko).`
+      };
+
+      cart.push({ ...customRobuxItem, quantity: 1 });
+      updateCartUI();
+      openCart();
+      showToast(`Custom ${amount} Robux ditambahkan ke keranjang!`);
+    });
+
+    function scrollToRobux() {
+      document.getElementById('robuxSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /* ========================================================
+       KERANJANG BELANJA & CHECKOUT
+    ======================================================== */
+    const cartModal = document.getElementById('cartModal');
+    const cartBackdrop = document.getElementById('cartBackdrop');
+    const cartPanel = document.getElementById('cartPanel');
+    const openCartBtn = document.getElementById('openCartBtn');
+    const closeCartBtn = document.getElementById('closeCartBtn');
+    const cartCountBadge = document.getElementById('cartCountBadge');
+    const cartItemList = document.getElementById('cartItemList');
+    const cartTotalPrice = document.getElementById('cartTotalPrice');
+
+    function openCart() {
+      cartModal.classList.remove('hidden');
+      setTimeout(() => {
+        cartBackdrop.classList.remove('opacity-0');
+        cartPanel.classList.remove('translate-x-full');
+      }, 10);
+    }
+
+    function closeCart() {
+      cartBackdrop.classList.add('opacity-0');
+      cartPanel.classList.add('translate-x-full');
+      setTimeout(() => cartModal.classList.add('hidden'), 300);
+    }
+
+    openCartBtn.addEventListener('click', openCart);
+    closeCartBtn.addEventListener('click', closeCart);
+    cartBackdrop.addEventListener('click', closeCart);
+
+    function addToCart(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+
+      const exist = cart.find(item => item.id === productId);
+      if (exist) {
+        exist.quantity += 1;
+      } else {
+        cart.push({ ...prod, quantity: 1 });
+      }
+
+      updateCartUI();
+      showToast(`${prod.title} ditambahkan!`);
+    }
+
+    function updateCartQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.quantity += delta;
+      if (item.quantity <= 0) {
+        cart = cart.filter(i => i.id !== id);
+      }
+      updateCartUI();
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      updateCartUI();
+    }
+
+    function calculateTotal() {
+      return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    }
+
+    function updateCartUI() {
+      const totalQty = cart.reduce((sum, i) => sum + i.quantity, 0);
+      const totalCost = calculateTotal();
+
+      cartCountBadge.textContent = totalQty;
+      cartTotalPrice.textContent = formatRupiah(totalCost);
+
+      if (cart.length === 0) {
+        cartItemList.innerHTML = `
+          <div class="py-12 text-center text-slate-500">
+            <i class="fa-solid fa-cart-arrow-down text-3xl mb-2 text-slate-600"></i>
+            <p class="text-xs font-bold text-slate-400">Keranjang masih kosong</p>
+            <p class="text-[11px] mt-0.5">Pilih map atau asset Roblox untuk ditambahkan.</p>
+          </div>
+        `;
+        return;
+      }
+
+      cartItemList.innerHTML = cart.map(item => `
+        <div class="py-3 flex gap-3 items-center">
+          <img src="${item.image}" alt="${item.title}" class="w-14 h-14 rounded-xl object-cover bg-dark-900 border border-white/5">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-xs font-bold text-white truncate">${item.title}</h4>
+            <div class="text-[11px] font-semibold text-cyan-400 mt-0.5">${formatRupiah(item.price)}</div>
+            <div class="flex items-center gap-2 mt-1.5">
+              <button onclick="updateCartQty('${item.id}', -1)" class="w-5 h-5 rounded bg-white/5 hover:bg-white/10 text-white text-[10px]">-</button>
+              <span class="text-xs font-bold text-slate-200">${item.quantity}</span>
+              <button onclick="updateCartQty('${item.id}', 1)" class="w-5 h-5 rounded bg-white/5 hover:bg-white/10 text-white text-[10px]">+</button>
+            </div>
+          </div>
+          <button onclick="removeFromCart('${item.id}')" class="text-slate-500 hover:text-red-400 p-2 text-xs">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+      `).join("");
+    }
+
+    /* ========================================================
+       CHECKOUT: WHATSAPP & QRIS
+    ======================================================== */
+    const checkoutWhatsappBtn = document.getElementById('checkoutWhatsappBtn');
+    const openQrisModalBtn = document.getElementById('openQrisModalBtn');
+
+    function validateOrderFields() {
+      if (cart.length === 0) {
+        showToast("Keranjang Anda masih kosong!");
+        return false;
+      }
+      const robloxUser = document.getElementById('buyerRobloxUser').value.trim();
+      const whatsapp = document.getElementById('buyerWhatsapp').value.trim();
+
+      if (!robloxUser) {
+        showToast("Harap isi Username Roblox Anda!");
+        document.getElementById('buyerRobloxUser').focus();
+        return false;
+      }
+      return { robloxUser, whatsapp, notes: document.getElementById('buyerNotes').value.trim() };
+    }
+
+    checkoutWhatsappBtn.addEventListener('click', () => {
+      const buyer = validateOrderFields();
+      if (!buyer) return;
+
+      const total = calculateTotal();
+      const orderId = 'KD-' + Math.floor(100000 + Math.random() * 900000);
+
+      // Simpan ke Order Log Lokal
+      orderLogs.unshift({
+        id: orderId,
+        date: new Date().toLocaleString('id-ID'),
+        robloxUser: buyer.robloxUser,
+        whatsapp: buyer.whatsapp || '-',
+        items: cart.map(i => `${i.title} (${i.quantity}x)`).join(', '),
+        total: total
+      });
+      saveOrderLogs();
+
+      // Format WhatsApp Pesan
+      let itemsListText = cart.map((item, idx) => 
+        `${idx + 1}. *${item.title}* [${item.format}]\n   Jumlah: ${item.quantity}x | Subtotal: ${formatRupiah(item.price * item.quantity)}`
+      ).join('\n');
+
+      const waMessage = 
+`⚡ *ORDER BARU - KAEL STORE DEVELOPMENT* ⚡
+No. Order: *${orderId}*
+
+👤 *Data Pembeli:*
+- Username Roblox: *${buyer.robloxUser}*
+- WhatsApp Pembeli: ${buyer.whatsapp || '-'}
+- Catatan / Discord Tag: ${buyer.notes || '-'}
+
+📦 *Daftar Asset:*
+${itemsListText}
+
+💰 *TOTAL PEMBAYARAN: ${formatRupiah(total)}*
+
+Mohon nomor rekening / konfirmasi admin untuk pengiriman file asset / proses transfer Robux. Terima kasih!`;
+
+      const url = `https://wa.me/${storeSettings.whatsappNumber}?text=${encodeURIComponent(waMessage)}`;
+      window.open(url, '_blank');
+      showToast("Membuka WhatsApp Admin...");
+    });
+
+    openQrisModalBtn.addEventListener('click', () => {
+      const buyer = validateOrderFields();
+      if (!buyer) return;
+
+      const total = calculateTotal();
+      document.getElementById('qrisAmountText').textContent = formatRupiah(total);
+      document.getElementById('qrisDisplayImg').src = storeSettings.qrisUrl;
+
+      document.getElementById('qrisModal').classList.remove('hidden');
+    });
+
+    function closeQrisModal() {
+      document.getElementById('qrisModal').classList.add('hidden');
+    }
+
+    function copyQrisAmount() {
+      const total = calculateTotal();
+      const dummy = document.createElement("input");
+      document.body.appendChild(dummy);
+      dummy.value = total;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
+      showToast("Nominal disalin: " + total);
+    }
+
+    function confirmQrisPayment() {
+      closeQrisModal();
+      checkoutWhatsappBtn.click();
+    }
+
+    /* ========================================================
+       MODAL DETAIL PRODUK
+    ======================================================== */
+    const productDetailModal = document.getElementById('productDetailModal');
+    const detailBackdrop = document.getElementById('detailBackdrop');
+    const detailBox = document.getElementById('detailBox');
+
+    function openProductDetail(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (!prod) return;
+
+      activeDetailProduct = prod;
+      document.getElementById('modalDetailImage').src = prod.image;
+      document.getElementById('modalDetailFormatBadge').textContent = prod.format;
+      document.getElementById('modalDetailCategory').textContent = prod.category;
+      document.getElementById('modalDetailTitle').textContent = prod.title;
+      document.getElementById('modalDetailPrice').textContent = formatRupiah(prod.price);
+      document.getElementById('modalDetailDesc').textContent = prod.description;
+
+      productDetailModal.classList.remove('hidden');
+      setTimeout(() => {
+        detailBackdrop.classList.remove('opacity-0');
+        detailBox.classList.remove('opacity-0', 'scale-95');
+      }, 10);
+    }
+
+    function closeProductDetail() {
+      detailBackdrop.classList.add('opacity-0');
+      detailBox.classList.add('opacity-0', 'scale-95');
+      setTimeout(() => productDetailModal.classList.add('hidden'), 300);
+    }
+
+    document.getElementById('closeDetailBtn').addEventListener('click', closeProductDetail);
+    detailBackdrop.addEventListener('click', closeProductDetail);
+
+    document.getElementById('modalDetailAddToCart').addEventListener('click', () => {
+      if (activeDetailProduct) {
+        addToCart(activeDetailProduct.id);
+        closeProductDetail();
+      }
+    });
+
+    /* ========================================================
+       SISTEM ADMIN & WHITELIST MANAGEMENT
+    ======================================================== */
+    const adminModal = document.getElementById('adminModal');
+    const adminLoginGate = document.getElementById('adminLoginGate');
+    const adminDashboardView = document.getElementById('adminDashboardView');
+    const openAdminModalBtn = document.getElementById('openAdminModalBtn');
+
+    openAdminModalBtn.addEventListener('click', () => {
+      adminModal.classList.remove('hidden');
+      if (isAdminLoggedIn) {
+        showAdminDashboard();
+      } else {
+        adminLoginGate.classList.remove('hidden');
+        adminDashboardView.classList.add('hidden');
+        document.getElementById('adminKeyInput').value = '';
+        document.getElementById('adminKeyInput').focus();
+      }
+    });
+
+    function closeAdminModal() {
+      adminModal.classList.add('hidden');
+    }
+
+    function verifyAdminAccess() {
+      const inputKey = document.getElementById('adminKeyInput').value.trim();
+      const match = adminWhitelist.find(admin => admin.key === inputKey);
+
+      if (match) {
+        isAdminLoggedIn = true;
+        showToast(`Selamat datang, ${match.name}!`);
+        showAdminDashboard();
+      } else {
+        showToast("Passkey Salah! Akses Whitelist Ditolak.");
+      }
+    }
+
+    function showAdminDashboard() {
+      adminLoginGate.classList.add('hidden');
+      adminDashboardView.classList.remove('hidden');
+      renderAdminProducts();
+      renderAdminWhitelist();
+      loadSettingsToInputs();
+      renderAdminOrders();
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      adminDashboardView.classList.add('hidden');
+      adminLoginGate.classList.remove('hidden');
+      showToast("Berhasil logout dari panel admin.");
+    }
+
+    // Switch Tab Admin
+    function switchAdminTab(tabName) {
+      const tabs = ['products', 'whitelist', 'settings', 'orders'];
+      tabs.forEach(t => {
+        document.getElementById(`adminTab${t.charAt(0).toUpperCase() + t.slice(1)}`).classList.add('hidden');
+        document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`).classList.remove('active', 'text-brand-400', 'border-b-2', 'border-brand-500');
+        document.getElementById(`tabBtn${t.charAt(0).toUpperCase() + t.slice(1)}`).classList.add('text-slate-400');
+      });
+
+      const currentBtn = document.getElementById(`tabBtn${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`);
+      currentBtn.classList.add('active', 'text-brand-400', 'border-b-2', 'border-brand-500');
+      currentBtn.classList.remove('text-slate-400');
+      document.getElementById(`adminTab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`).classList.remove('hidden');
+    }
+
+    // Render Admin Products
+    function renderAdminProducts() {
+      const tbody = document.getElementById('adminProductTableBody');
+      tbody.innerHTML = products.map(p => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="p-3 flex items-center gap-2">
+            <img src="${p.image}" class="w-8 h-8 rounded-lg object-cover">
+            <span class="font-bold text-white">${p.title}</span>
+          </td>
+          <td class="p-3 text-slate-300">${p.category}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] bg-dark-900 text-cyan-300 font-mono">${p.format}</span></td>
+          <td class="p-3 text-emerald-400 font-bold">${formatRupiah(p.price)}</td>
+          <td class="p-3 text-right space-x-2">
+            <button onclick="editProduct(${p.id})" class="text-brand-400 hover:text-brand-300"><i class="fa-solid fa-pen-to-square"></i></button>
+            <button onclick="deleteProduct(${p.id})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // Render Whitelist Table
+    function renderAdminWhitelist() {
+      const tbody = document.getElementById('adminWhitelistTableBody');
+      tbody.innerHTML = adminWhitelist.map((adm, idx) => `
+        <tr class="hover:bg-white/5">
+          <td class="p-3 font-bold text-white">${adm.name}</td>
+          <td class="p-3 font-mono text-cyan-400 text-xs">•••••••• (${adm.key.slice(-3)})</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${adm.role.includes('Master') ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-brand-500/20 text-brand-300'}">
+              ${adm.role}
+            </span>
+          </td>
+          <td class="p-3 text-right">
+            ${adm.role.includes('Master') 
+              ? '<span class="text-[10px] text-slate-500 italic">Protected</span>' 
+              : `<button onclick="removeAdminFromWhitelist(${idx})" class="text-red-400 hover:text-red-300 text-xs"><i class="fa-solid fa-user-xmark"></i> Hapus</button>`}
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function addAdminToWhitelist() {
+      const name = document.getElementById('newAdminName').value.trim();
+      const key = document.getElementById('newAdminKey').value.trim();
+
+      if (!name || key.length < 4) {
+        showToast("Nama dan Passkey (minimal 4 digit) wajib diisi!");
+        return;
+      }
+
+      if (adminWhitelist.some(a => a.key === key)) {
+        showToast("Passkey tersebut sudah digunakan admin lain!");
+        return;
+      }
+
+      adminWhitelist.push({ key, name, role: "Sub-Admin Store" });
+      saveWhitelist();
+      renderAdminWhitelist();
+
+      document.getElementById('newAdminName').value = '';
+      document.getElementById('newAdminKey').value = '';
+      showToast(`Admin '${name}' berhasil ditambahkan ke whitelist!`);
+    }
+
+    function removeAdminFromWhitelist(index) {
+      if (confirm(`Yakin ingin menghapus ${adminWhitelist[index].name} dari whitelist?`)) {
+        adminWhitelist.splice(index, 1);
+        saveWhitelist();
+        renderAdminWhitelist();
+        showToast("Admin dihapus dari whitelist.");
+      }
+    }
+
+    // Settings
+    function loadSettingsToInputs() {
+      document.getElementById('settingWhatsapp').value = storeSettings.whatsappNumber;
+      document.getElementById('settingDiscord').value = storeSettings.discordUrl;
+      document.getElementById('settingBanner').value = storeSettings.bannerText;
+      document.getElementById('settingQrisUrl').value = storeSettings.qrisUrl;
+    }
+
+    function saveStoreSettings() {
+      storeSettings.whatsappNumber = document.getElementById('settingWhatsapp').value.trim();
+      storeSettings.discordUrl = document.getElementById('settingDiscord').value.trim();
+      storeSettings.bannerText = document.getElementById('settingBanner').value.trim();
+      storeSettings.qrisUrl = document.getElementById('settingQrisUrl').value.trim();
+
+      saveSettings();
+      renderStorefront();
+      showToast("Pengaturan toko berhasil diperbarui!");
+    }
+
+    // Orders Log
+    function renderAdminOrders() {
+      const tbody = document.getElementById('adminOrderTableBody');
+      if (orderLogs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-500">Belum ada riwayat pesanan tercatat.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = orderLogs.map(o => `
+        <tr class="hover:bg-white/5">
+          <td class="p-3"><div class="font-bold text-white">${o.id}</div><div class="text-[10px] text-slate-500">${o.date}</div></td>
+          <td class="p-3 text-cyan-300 font-bold">${o.robloxUser}</td>
+          <td class="p-3 text-slate-400">${o.whatsapp}</td>
+          <td class="p-3 text-slate-300 max-w-xs truncate">${o.items}</td>
+          <td class="p-3 text-emerald-400 font-bold">${formatRupiah(o.total)}</td>
+        </tr>
+      `).join("");
+    }
+
+    function clearOrderHistory() {
+      if (confirm("Hapus seluruh catatan riwayat pesanan?")) {
+        orderLogs = [];
+        saveOrderLogs();
+        renderAdminOrders();
+        showToast("Log pesanan dibersihkan.");
+      }
+    }
+
+    /* ========================================================
+       CRUD PRODUK MODAL
+    ======================================================== */
+    const productFormModal = document.getElementById('productFormModal');
+
+    function openProductFormModal(editId = null) {
+      document.getElementById('productCrudForm').reset();
+      document.getElementById('crudProductId').value = '';
+      document.getElementById('productFormTitle').textContent = editId ? "Edit Asset / Produk" : "Tambah Asset Baru";
+
+      if (editId) {
+        const p = products.find(prod => prod.id === editId);
+        if (p) {
+          document.getElementById('crudProductId').value = p.id;
+          document.getElementById('crudTitle').value = p.title;
+          document.getElementById('crudCategory').value = p.category;
+          document.getElementById('crudFormat').value = p.format;
+          document.getElementById('crudPrice').value = p.price;
+          document.getElementById('crudImage').value = p.image;
+          document.getElementById('crudDesc').value = p.description;
+        }
+      }
+
+      productFormModal.classList.remove('hidden');
+    }
+
+    function closeProductFormModal() {
+      productFormModal.classList.add('hidden');
+    }
+
+    function editProduct(id) {
+      openProductFormModal(id);
+    }
+
+    function deleteProduct(id) {
+      if (confirm("Hapus produk ini dari toko?")) {
+        products = products.filter(p => p.id !== id);
+        saveProducts();
+        renderAdminProducts();
+        renderStorefront();
+        showToast("Produk berhasil dihapus!");
+      }
+    }
+
+    function handleProductSubmit(e) {
+      e.preventDefault();
+      const idInput = document.getElementById('crudProductId').value;
+      const title = document.getElementById('crudTitle').value.trim();
+      const category = document.getElementById('crudCategory').value;
+      const format = document.getElementById('crudFormat').value.trim();
+      const price = parseInt(document.getElementById('crudPrice').value) || 0;
+      const image = document.getElementById('crudImage').value.trim();
+      const description = document.getElementById('crudDesc').value.trim();
+
+      if (idInput) {
+        // Edit
+        const pIndex = products.findIndex(p => p.id == idInput);
+        if (pIndex > -1) {
+          products[pIndex] = { ...products[pIndex], title, category, format, price, image, description };
+          showToast("Produk berhasil diperbarui!");
+        }
+      } else {
+        // Create
+        const newProduct = {
+          id: Date.now(),
+          title, category, format, price, image, description
+        };
+        products.unshift(newProduct);
+        showToast("Produk baru berhasil ditambahkan!");
+      }
+
+      saveProducts();
+      renderAdminProducts();
+      renderStorefront();
+      closeProductFormModal();
+    }
+
+    /* ========================================================
+       TOAST NOTIFICATION
+    ======================================================== */
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = message;
+
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 2500);
+    }
+
+    /* ========================================================
+       INIT ON LOAD
+    ======================================================== */
+    window.onload = function() {
+      renderStorefront();
+      updateCartUI();
+      updateRobuxCalculation();
+    };
+  </script>
+</body>
+</html>
