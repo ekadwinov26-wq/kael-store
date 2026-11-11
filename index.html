@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kael Store - Official Roblox Asset & Script Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Denk+One&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #7000ff;
+            --accent: #ff007b;
+            --bg-dark: #050814;
+            --card-bg: rgba(10, 15, 35, 0.75);
+            --border-glow: rgba(0, 240, 255, 0.3);
+            --text-main: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 3D Sci-Fi HUD Background Animation */
+        .hud-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(112, 0, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(0, 240, 255, 0.12) 0%, transparent 40%),
+                linear-gradient(135deg, #03050c 0%, #0a0f24 100%);
+            overflow: hidden;
+        }
+
+        .hud-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(1000px) rotateX(60deg);
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(1000px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(1000px) rotateX(60deg) translateY(50px); }
+        }
+
+        /* Floating Hologram Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.4;
+            animation: floatOrb 10s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 300px; height: 300px; background: var(--primary); top: 10%; left: 10%; }
+        .orb-2 { width: 400px; height: 400px; background: var(--secondary); bottom: 10%; right: 10%; animation-delay: -5s; }
+
+        @keyframes floatOrb {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
+        }
+
+        /* Header & Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(5, 8, 20, 0.85);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-glow);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+            color: var(--primary);
+            text-shadow: 0 0 15px var(--primary);
+        }
+
+        .logo-text {
+            font-family: 'Denk One', sans-serif;
+            font-size: 28px;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(0, 240, 255, 0.15);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            border: 1px solid var(--primary);
+        }
+
+        /* Main Content Container */
+        .container {
+            max-width: 1300px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Hero Banner */
+        .hero {
+            background: linear-gradient(135deg, rgba(10, 15, 35, 0.9), rgba(112, 0, 255, 0.2));
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,240,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-family: 'Denk One', sans-serif;
+            font-size: 42px;
+            margin-bottom: 15px;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: #94a3b8;
+            max-width: 700px;
+            margin: 0 auto 25px;
+        }
+
+        /* Grid Cards */
+        .grid-catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 40px rgba(0, 240, 255, 0.3);
+        }
+
+        .card-img-wrap {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
+            background: #020617;
+            cursor: pointer;
+        }
+
+        .card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-img-wrap img {
+            transform: scale(1.08);
+        }
+
+        .badge-type {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            text-transform: uppercase;
+        }
+
+        .card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-family: 'Denk One', sans-serif;
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .btn-buy {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .btn-buy:hover {
+            opacity: 0.9;
+        }
+
+        /* Modal 4 Photos Gallery */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(3, 5, 12, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 240, 255, 0.4);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .gallery-img-box {
+            height: 180px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-glow);
+            background: #000;
+        }
+
+        .gallery-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Robux Section & Roblox Avatar Fetcher */
+        .robux-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media(max-width: 768px) {
+            .robux-container { grid-template-columns: 1fr; }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid var(--border-glow);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .avatar-preview-box {
+            background: rgba(2, 6, 23, 0.6);
+            border: 1px dashed var(--border-glow);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 280px;
+        }
+
+        .avatar-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            margin-bottom: 15px;
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* Admin Panel */
+        .admin-login-box {
+            max-width: 450px;
+            margin: 50px auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+            text-align: center;
+        }
+
+        .admin-dashboard {
+            display: none;
+        }
+
+        .admin-subnav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-glow);
+            padding-bottom: 15px;
+            overflow-x: auto;
+        }
+
+        .subnav-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .subnav-btn.active {
+            background: rgba(0, 240, 255, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .admin-tab-content {
+            display: none;
+        }
+
+        .admin-tab-content.active {
+            display: block;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: rgba(2, 6, 23, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 14px;
+        }
+
+        th {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--primary);
+            font-family: 'Denk One', sans-serif;
+        }
+
+        /* Credit Section */
+        .credit-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .credit-card h2 {
+            font-family: 'Denk One', sans-serif;
+            font-size: 32px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+
+        .credit-card p {
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-main {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .btn-main:hover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hud-bg">
+        <div class="hud-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <i class="fa-solid fa-cube logo-icon"></i>
+            <span class="logo-text" id="storeBrandTitle">Kael Store</span>
+        </div>
+        <nav>
+            <button class="nav-link active" onclick="switchTab('catalog')"><i class="fa-solid fa-store"></i> Katalog</button>
+            <button class="nav-link" onclick="switchTab('robux')"><i class="fa-solid fa-gem"></i> Robux</button>
+            <button class="nav-link" onclick="switchTab('credit')"><i class="fa-solid fa-id-badge"></i> Credit</button>
+            <button class="nav-link" onclick="switchTab('admin')"><i class="fa-solid fa-shield-halved"></i> Admin</button>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <!-- TAB: CATALOG -->
+        <section id="tab-catalog" class="section active">
+            <div class="hero">
+                <h1 id="heroTitle">Professional Roblox Assets & Scripts</h1>
+                <p id="heroDesc">Dapatkan map berkualitas tinggi, script kustom canggih, dan asset .rbxm siap pakai untuk game Roblox kamu dengan performa optimal.</p>
+                <div style="display: flex; gap: 15px; justify-content: center;">
+                    <a href="#" id="globalDiscordBtn" target="_blank" class="btn-main" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fa-brands fa-discord"></i> Join Discord Community
+                    </a>
+                </div>
+            </div>
+
+            <h2 style="font-family: 'Denk One'; font-size: 26px; margin-bottom: 20px; color: #fff;"><i class="fa-solid fa-fire text-primary"></i> Produk Unggulan</h2>
+            <div class="grid-catalog" id="productGrid">
+                <!-- Dynamic Products Injected Here -->
+            </div>
+        </section>
+
+        <!-- TAB: ROBUX -->
+        <section id="tab-robux" class="section">
+            <div class="hero">
+                <h1>Instant Robux Top Up & Checkout</h1>
+                <p>Masukkan username Roblox kamu untuk verifikasi otomatis avatar, lalu pilih nominal Robux atau paket asset yang diinginkan.</p>
+            </div>
+
+            <div class="robux-container">
+                <div class="card" style="padding: 30px;">
+                    <h2 style="font-family: 'Denk One'; margin-bottom: 20px; font-size: 22px;">Verifikasi Pembeli</h2>
+                    <div class="form-group">
+                        <label>Username Roblox</label>
+                        <input type="text" id="robloxUsernameInput" class="form-control" placeholder="Contoh: KaelDeveloper" oninput="fetchRobloxAvatar(this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Pilih Nominal / Paket</label>
+                        <select id="robuxPackageSelect" class="form-control">
+                            <option value="400 Robux">400 Robux - Rp 65.000</option>
+                            <option value="800 Robux">800 Robux - Rp 130.000</option>
+                            <option value="1700 Robux">1,700 Robux - Rp 260.000</option>
+                            <option value="4500 Robux">4,500 Robux - Rp 650.000</option>
+                        </select>
+                    </div>
+                    <button class="btn-main" style="width: 100%; margin-top: 10px;" onclick="checkoutRobux()"><i class="fa-brands fa-whatsapp"></i> Pesan via WhatsApp Admin</button>
+                </div>
+
+                <div class="avatar-preview-box">
+                    <img id="robloxAvatarImg" src="https://tr.rbxcdn.com/30day-avatar/120/120/Avatar/Png" class="avatar-img" alt="Avatar Preview">
+                    <h3 id="robloxAvatarName" style="font-family: 'Denk One'; font-size: 20px; margin-bottom: 5px;">Menunggu Username...</h3>
+                    <p style="font-size: 13px; color: #94a3b8;">Avatar Roblox akan muncul otomatis secara real-time.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: CREDIT -->
+        <section id="tab-credit" class="section">
+            <div class="credit-card">
+                <h2>Credit & Information</h2>
+                <p id="creditTextContent">Kael Store dikembangkan dan dikelola secara profesional oleh tim Kael Development untuk menyediakan solusi script, map building, dan asset development Roblox berkualitas tinggi.</p>
+                <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                    <a id="creditDiscordLink" href="#" target="_blank" class="btn-main" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;"><i class="fa-brands fa-discord"></i> Discord Server</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB: ADMIN -->
+        <section id="tab-admin" class="section">
+            <div id="adminLoginWrapper" class="admin-login-box">
+                <h2 style="font-family: 'Denk One'; font-size: 26px; margin-bottom: 15px;">Admin Portal Login</h2>
+                <p style="font-size: 13px; color: #94a3b8; margin-bottom: 25px;">Masukkan Username Discord kamu untuk verifikasi Whitelist Admin.</p>
+                <div class="form-group">
+                    <input type="text" id="discordLoginInput" class="form-control" placeholder="Contoh: kael_dev">
+                </div>
+                <button class="btn-main" style="width: 100%;" onclick="verifyAdminLogin()">Masuk Admin Panel</button>
+            </div>
+
+            <div id="adminDashboardWrapper" class="admin-dashboard">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <h2 style="font-family: 'Denk One'; font-size: 26px;"><i class="fa-solid fa-gauge-high text-primary"></i> Admin Dashboard</h2>
+                    <button class="btn-buy" style="background: #ef4444;" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+                </div>
+
+                <div class="admin-subnav">
+                    <button class="subnav-btn active" onclick="switchAdminSubTab('products')"><i class="fa-solid fa-box"></i> Kelola Produk</button>
+                    <button class="subnav-btn" onclick="switchAdminSubTab('whitelist')"><i class="fa-solid fa-user-shield"></i> Whitelist Admin</button>
+                    <button class="subnav-btn" onclick="switchAdminSubTab('settings')"><i class="fa-solid fa-gear"></i> Pengaturan WA & Discord</button>
+                </div>
+
+                <!-- Subtab: Products -->
+                <div id="adminSub-products" class="admin-tab-content active">
+                    <div class="card" style="padding: 25px; margin-bottom: 25px;">
+                        <h3 style="font-family: 'Denk One'; margin-bottom: 15px; font-size: 18px;" id="formProductTitle">Tambah Produk Baru</h3>
+                        <input type="hidden" id="editProductId">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Nama Produk</label>
+                                <input type="text" id="pName" class="form-control" placeholder="Contoh: Cyberpunk Stage Map">
+                            </div>
+                            <div class="form-group">
+                                <label>Kategori</label>
+                                <select id="pCategory" class="form-control">
+                                    <option value="Map Roblox">Map Roblox</option>
+                                    <option value="Asset .rbxm">Asset .rbxm</option>
+                                    <option value="Script System">Script System</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Harga</label>
+                                <input type="text" id="pPrice" class="form-control" placeholder="Rp 150.000 / 500 Robux">
+                            </div>
+                            <div class="form-group">
+                                <label>Nomor WhatsApp Admin (Untuk Produk Ini)</label>
+                                <input type="text" id="pWa" class="form-control" placeholder="628123456789">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Deskripsi Produk</label>
+                            <textarea id="pDesc" class="form-control" rows="2" placeholder="Deskripsi lengkap produk..."></textarea>
+                        </div>
+                        <h4 style="font-size: 14px; margin-bottom: 10px; color: var(--primary);">Link 4 Foto Preview (Map / Asset)</h4>
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px;">
+                            <input type="text" id="pImg1" class="form-control" placeholder="Foto 1 URL">
+                            <input type="text" id="pImg2" class="form-control" placeholder="Foto 2 URL">
+                            <input type="text" id="pImg3" class="form-control" placeholder="Foto 3 URL">
+                            <input type="text" id="pImg4" class="form-control" placeholder="Foto 4 URL">
+                        </div>
+                        <button class="btn-main" onclick="saveProduct()"><i class="fa-solid fa-floppy-disk"></i> Simpan Produk</button>
+                    </div>
+
+                    <h3 style="font-family: 'Denk One'; margin-bottom: 15px; font-size: 20px;">Daftar Produk Aktif</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Produk</th>
+                                <th>Kategori</th>
+                                <th>Harga</th>
+                                <th>WA Admin</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminProductTableBody">
+                            <!-- Dynamic admin rows -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Subtab: Whitelist -->
+                <div id="adminSub-whitelist" class="admin-tab-content">
+                    <div class="card" style="padding: 25px; margin-bottom: 25px;">
+                        <h3 style="font-family: 'Denk One'; margin-bottom: 15px; font-size: 18px;">Tambah Admin via Username Discord</h3>
+                        <div style="display: flex; gap: 15px;">
+                            <input type="text" id="newAdminDiscord" class="form-control" placeholder="Contoh: kael_dev">
+                            <button class="btn-main" onclick="addWhitelistAdmin()"><i class="fa-solid fa-user-plus"></i> Whitelist</button>
+                        </div>
+                    </div>
+                    <h3 style="font-family: 'Denk One'; margin-bottom: 15px; font-size: 20px;">Daftar Whitelist Admin</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username Discord</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminWhitelistTableBody">
+                            <!-- Dynamic Whitelist -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Subtab: Settings -->
+                <div id="adminSub-settings" class="admin-tab-content">
+                    <div class="card" style="padding: 25px;">
+                        <h3 style="font-family: 'Denk One'; margin-bottom: 15px; font-size: 18px;">Pengaturan Global Website</h3>
+                        <div class="form-group">
+                            <label>Nama Store</label>
+                            <input type="text" id="settingStoreName" class="form-control" value="Kael Store">
+                        </div>
+                        <div class="form-group">
+                            <label>Link Discord Global</label>
+                            <input type="text" id="settingDiscordLink" class="form-control" value="https://discord.gg/kaelstudio">
+                        </div>
+                        <div class="form-group">
+                            <label>Teks Credit / Tentang Kami</label>
+                            <textarea id="settingCreditText" class="form-control" rows="3">Kael Store dikembangkan dan dikelola secara profesional oleh tim Kael Development untuk menyediakan solusi script, map building, dan asset development Roblox berkualitas tinggi.</textarea>
+                        </div>
+                        <button class="btn-main" onclick="saveGlobalSettings()"><i class="fa-solid fa-check"></i> Simpan Pengaturan</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <!-- MODAL 4 PHOTOS SHOWCASE -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeProductModal()">&times;</button>
+            <h2 id="modalTitle" style="font-family: 'Denk One'; font-size: 26px; color: #fff; margin-bottom: 10px;">Nama Produk</h2>
+            <p id="modalCategory" style="color: var(--primary); font-weight: 700; font-size: 13px; text-transform: uppercase; margin-bottom: 15px;"></p>
+            <p id="modalDesc" style="color: #94a3b8; font-size: 14px; margin-bottom: 20px; line-height: 1.6;"></p>
+            
+            <h3 style="font-family: 'Denk One'; font-size: 18px; margin-bottom: 10px; color: #fff;"><i class="fa-solid fa-images"></i> Galeri 4 Foto Preview</h3>
+            <div class="gallery-grid" id="modalGalleryGrid">
+                <!-- 4 Photos -->
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; border-top: 1px solid var(--border-glow); padding-top: 20px;">
+                <div>
+                    <span style="font-size: 13px; color: #94a3b8; display: block;">Harga Resmi</span>
+                    <span id="modalPrice" style="font-size: 22px; font-weight: 800; color: var(--primary);">Rp 0</span>
+                </div>
+                <a id="modalBuyBtn" href="#" target="_blank" class="btn-main"><i class="fa-brands fa-whatsapp"></i> Hubungi WhatsApp Admin</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default State & Storage Initialization
+        const STORAGE_KEY = "kael_store_data_v2";
+
+        let defaultData = {
+            settings: {
+                storeName: "Kael Store",
+                discordLink: "https://discord.gg/kaelstudio",
+                creditText: "Kael Store dikembangkan dan dikelola secara profesional oleh tim Kael Development untuk menyediakan solusi script, map building, dan asset development Roblox berkualitas tinggi."
+            },
+            admins: ["kael_dev", "owner", "admin1"],
+            products: [
+                {
+                    id: 1,
+                    name: "Cyberpunk Nightclub Map V2",
+                    category: "Map Roblox",
+                    price: "Rp 180.000",
+                    wa: "628123456789",
+                    desc: "Map club malam bertema cyberpunk dengan sistem lampu neon kustom, stage dansa interaktif, dan optimasi low-poly tinggi.",
+                    images: [
+                        "https://images.unsplash.com/photo-1545128485-c400e7702796?w=600",
+                        "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=600",
+                        "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600",
+                        "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=600"
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "Advanced Battle Dance System (.rbxm)",
+                    category: "Asset .rbxm",
+                    price: "Rp 120.000",
+                    wa: "628123456789",
+                    desc: "Framework battle dance mobile-responsive lengkap dengan panel juri whitelisted, 3D winner podium, dan UI modern.",
+                    images: [
+                        "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=600",
+                        "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600",
+                        "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600",
+                        "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=600"
+                    ]
+                }
+            ]
+        };
+
+        function getAppData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            return data ? JSON.parse(data) : defaultData;
+        }
+
+        function saveAppData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            window.dispatchEvent(new Event('storage'));
+        }
+
+        // Real-time Storage Listener for multi-tab / customer sync
+        window.addEventListener('storage', () => {
+            renderApp();
+        });
+
+        // Navigation Switcher
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function switchAdminSubTab(subId) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.subnav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            const targetContent = document.getElementById('adminSub-' + subId);
+            if (targetContent) targetContent.classList.add('active');
+            
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+        }
+
+        // Render Application UI
+        function renderApp() {
+            const db = getAppData();
+            
+            // Header & Global
+            document.getElementById('storeBrandTitle').innerText = db.settings.storeName;
+            document.getElementById('globalDiscordBtn').href = db.settings.discordLink;
+            document.getElementById('creditDiscordLink').href = db.settings.discordLink;
+            document.getElementById('creditTextContent').innerText = db.settings.creditText;
+
+            // Product Grid
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            
+            db.products.forEach(prod => {
+                const mainImg = (prod.images && prod.images[0]) ? prod.images[0] : 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600';
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-img-wrap" onclick="openProductModal(${prod.id})">
+                        <span class="badge-type">${prod.category}</span>
+                        <img src="${mainImg}" alt="${prod.name}">
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <h3 class="card-title">${prod.name}</h3>
+                            <p class="card-desc">${prod.desc}</p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="price">${prod.price}</span>
+                            <a href="https://wa.me/${prod.wa}?text=Halo%20Admin,%20saya%20tertarik%20membeli%20produk%20*${encodeURIComponent(prod.name)}*" target="_blank" class="btn-buy">
+                                <i class="fa-brands fa-whatsapp"></i> Beli
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Admin Tables
+            const adminTable = document.getElementById('adminProductTableBody');
+            if (adminTable) {
+                adminTable.innerHTML = '';
+                db.products.forEach(prod => {
+                    adminTable.innerHTML += `
+                        <tr>
+                            <td><strong>${prod.name}</strong></td>
+                            <td>${prod.category}</td>
+                            <td>${prod.price}</td>
+                            <td>${prod.wa}</td>
+                            <td>
+                                <button class="btn-buy" style="padding: 4px 10px; font-size: 11px; display: inline-flex; margin-right: 5px;" onclick="editProduct(${prod.id})">Edit</button>
+                                <button class="btn-buy" style="padding: 4px 10px; font-size: 11px; background: #ef4444; display: inline-flex;" onclick="deleteProduct(${prod.id})">Hapus</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const whitelistTable = document.getElementById('adminWhitelistTableBody');
+            if (whitelistTable) {
+                whitelistTable.innerHTML = '';
+                db.admins.forEach((adm, index) => {
+                    whitelistTable.innerHTML += `
+                        <tr>
+                            <td><i class="fa-brands fa-discord text-primary"></i> @${adm}</td>
+                            <td><button class="btn-buy" style="padding: 4px 10px; font-size: 11px; background: #ef4444;" onclick="removeAdmin(${index})">Hapus</button></td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        // Roblox Avatar Fetcher in Real-time
+        async function fetchRobloxAvatar(username) {
+            const imgEl = document.getElementById('robloxAvatarImg');
+            const nameEl = document.getElementById('robloxAvatarName');
+            
+            if (!username || username.trim().length < 2) {
+                imgEl.src = "https://tr.rbxcdn.com/30day-avatar/120/120/Avatar/Png";
+                nameEl.innerText = "Menunggu Username...";
+                return;
+            }
+
+            nameEl.innerText = "Mencari Avatar...";
+            try {
+                // Step 1: Get UserId from Username
+                const userRes = await fetch(`https://users.roblox.com/v1/usernames/users`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usernames: [username], excludeBannedUsers: true })
+                });
+                const userData = await userRes.json();
+                
+                if (userData && userData.data && userData.data.length > 0) {
+                    const userId = userData.data[0].id;
+                    const displayName = userData.data[0].displayName;
+                    const name = userData.data[0].name;
+
+                    // Step 2: Get Avatar Headshot Thumbnail
+                    const thumbRes = await fetch(`https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=150x150&format=Png&isCircular=false`);
+                    const thumbData = await thumbRes.json();
+
+                    if (thumbData && thumbData.data && thumbData.data.length > 0) {
+                        const avatarUrl = thumbData.data[0].imageUrl;
+                        imgEl.src = avatarUrl;
+                        nameEl.innerText = `${displayName} (@${name})`;
+                    }
+                } else {
+                    nameEl.innerText = "User Tidak Ditemukan";
+                    imgEl.src = "https://tr.rbxcdn.com/30day-avatar/120/120/Avatar/Png";
+                }
+            } catch (err) {
+                nameEl.innerText = "Gagal Memuat Avatar";
+                imgEl.src = "https://tr.rbxcdn.com/30day-avatar/120/120/Avatar/Png";
+            }
+        }
+
+        // Modal 4 Photos Logic
+        function openProductModal(productId) {
+            const db = getAppData();
+            const prod = db.products.find(p => p.id === productId);
+            if (!prod) return;
+
+            document.getElementById('modalTitle').innerText = prod.name;
+            document.getElementById('modalCategory').innerText = prod.category;
+            document.getElementById('modalDesc').innerText = prod.desc;
+            document.getElementById('modalPrice').innerText = prod.price;
+            document.getElementById('modalBuyBtn').href = `https://wa.me/${prod.wa}?text=Halo%20Admin,%20saya%20ingin%20membeli%20${encodeURIComponent(prod.name)}`;
+
+            const grid = document.getElementById('modalGalleryGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 4; i++) {
+                const imgUrl = (prod.images && prod.images[i]) ? prod.images[i] : 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600';
+                grid.innerHTML += `
+                    <div class="gallery-img-box">
+                        <img src="${imgUrl}" alt="Preview ${i+1}">
+                    </div>
+                `;
+            }
+
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        // Admin Whitelist Login
+        function verifyAdminLogin() {
+            const inputVal = document.getElementById('discordLoginInput').value.trim().replace('@', '');
+            const db = getAppData();
+
+            if (db.admins.includes(inputVal)) {
+                document.getElementById('adminLoginWrapper').style.display = 'none';
+                document.getElementById('adminDashboardWrapper').style.display = 'block';
+                alert("Login Admin Berhasil!");
+            } else {
+                alert("Username Discord tidak terdaftar dalam Whitelist Admin!");
+            }
+        }
+
+        function adminLogout() {
+            document.getElementById('adminLoginWrapper').style.display = 'block';
+            document.getElementById('adminDashboardWrapper').style.display = 'none';
+            document.getElementById('discordLoginInput').value = '';
+        }
+
+        // Admin Product Management
+        function saveProduct() {
+            const db = getAppData();
+            const editId = document.getElementById('editProductId').value;
+            
+            const name = document.getElementById('pName').value;
+            const category = document.getElementById('pCategory').value;
+            const price = document.getElementById('pPrice').value;
+            const wa = document.getElementById('pWa').value;
+            const desc = document.getElementById('pDesc').value;
+            
+            const images = [
+                document.getElementById('pImg1').value,
+                document.getElementById('pImg2').value,
+                document.getElementById('pImg3').value,
+                document.getElementById('pImg4').value
+            ].filter(img => img.trim() !== "");
+
+            if (!name || !price || !wa) {
+                alert("Harap isi Nama, Harga, dan Nomor WhatsApp!");
+                return;
+            }
+
+            if (editId) {
+                // Edit
+                const index = db.products.findIndex(p => p.id == editId);
+                if (index !== -1) {
+                    db.products[index] = { id: Number(editId), name, category, price, wa, desc, images: images.length ? images : db.products[index].images };
+                }
+                document.getElementById('editProductId').value = '';
+                document.getElementById('formProductTitle').innerText = "Tambah Produk Baru";
+            } else {
+                // New
+                const newId = db.products.length > 0 ? Math.max(...db.products.map(p => p.id)) + 1 : 1;
+                db.products.push({ id: newId, name, category, price, wa, desc, images: images.length ? images : ["https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600"] });
+            }
+
+            saveAppData(db);
+            renderApp();
+
+            // Clear form
+            document.getElementById('pName').value = '';
+            document.getElementById('pPrice').value = '';
+            document.getElementById('pWa').value = '';
+            document.getElementById('pDesc').value = '';
+            document.getElementById('pImg1').value = '';
+            document.getElementById('pImg2').value = '';
+            document.getElementById('pImg3').value = '';
+            document.getElementById('pImg4').value = '';
+            alert("Produk berhasil disimpan dan langsung tersinkronisasi secara real-time!");
+        }
+
+        function editProduct(id) {
+            const db = getAppData();
+            const prod = db.products.find(p => p.id === id);
+            if (!prod) return;
+
+            document.getElementById('editProductId').value = prod.id;
+            document.getElementById('pName').value = prod.name;
+            document.getElementById('pCategory').value = prod.category;
+            document.getElementById('pPrice').value = prod.price;
+            document.getElementById('pWa').value = prod.wa;
+            document.getElementById('pDesc').value = prod.desc;
+            
+            if (prod.images) {
+                document.getElementById('pImg1').value = prod.images[0] || '';
+                document.getElementById('pImg2').value = prod.images[1] || '';
+                document.getElementById('pImg3').value = prod.images[2] || '';
+                document.getElementById('pImg4').value = prod.images[3] || '';
+            }
+
+            document.getElementById('formProductTitle').innerText = "Edit Produk: " + prod.name;
+            switchAdminSubTab('products');
+        }
+
+        function deleteProduct(id) {
+            if (!confirm("Yakin ingin menghapus produk ini?")) return;
+            const db = getAppData();
+            db.products = db.products.filter(p => p.id !== id);
+            saveAppData(db);
+            renderApp();
+        }
+
+        // Admin Whitelist Management
+        function addWhitelistAdmin() {
+            const username = document.getElementById('newAdminDiscord').value.trim().replace('@', '');
+            if (!username) return;
+
+            const db = getAppData();
+            if (db.admins.includes(username)) {
+                alert("Username Discord sudah terdaftar sebagai admin!");
+                return;
+            }
+
+            db.admins.push(username);
+            saveAppData(db);
+            renderApp();
+            document.getElementById('newAdminDiscord').value = '';
+            alert("Berhasil menambahkan admin baru via Whitelist Discord!");
+        }
+
+        function removeAdmin(index) {
+            const db = getAppData();
+            if (db.admins.length <= 1) {
+                alert("Minimal harus ada 1 admin dalam sistem!");
+                return;
+            }
+            db.admins.splice(index, 1);
+            saveAppData(db);
+            renderApp();
+        }
+
+        // Global Settings
+        function saveGlobalSettings() {
+            const db = getAppData();
+            db.settings.storeName = document.getElementById('settingStoreName').value;
+            db.settings.discordLink = document.getElementById('settingDiscordLink').value;
+            db.settings.creditText = document.getElementById('settingCreditText').value;
+
+            saveAppData(db);
+            renderApp();
+            alert("Pengaturan global berhasil disimpan!");
+        }
+
+        function checkoutRobux() {
+            const username = document.getElementById('robloxUsernameInput').value.trim();
+            const pkg = document.getElementById('robuxPackageSelect').value;
+
+            if (!username) {
+                alert("Harap masukkan Username Roblox terlebih dahulu!");
+                return;
+            }
+
+            const waUrl = `https://wa.me/628123456789?text=Halo%20Admin,%20saya%20ingin%20membeli%20paket%20*${encodeURIComponent(pkg)}*%20untuk%20akun%20Roblox%20*${encodeURIComponent(username)}*`;
+            window.open(waUrl, '_blank');
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            if (!localStorage.getItem(STORAGE_KEY)) {
+                saveAppData(defaultData);
+            }
+            renderApp();
+        };
+    </script>
+</body>
+</html>
